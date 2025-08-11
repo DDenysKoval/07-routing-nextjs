@@ -10,7 +10,7 @@ const Footer = () => {
           <p>Developer: Denys Koval</p>
           <p>
             Contact us:
-            <Link href="mailto:student@notehub.app">student@notehub.app</Link>
+            <Link href="mailto:denyskoval.dev@gmail.com">denyskoval.dev@gmail.com</Link>
           </p>
         </div>
       </div>

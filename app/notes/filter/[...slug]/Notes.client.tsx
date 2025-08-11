@@ -1,33 +1,34 @@
 "use client";
 
-import { useState, useEffect, ReactElement } from "react";
+import { useState } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { fetchNotes, NotesHttpResponse } from "@/lib/api";
 import { useDebouncedCallback } from "use-debounce";
 import NoteForm from "@/components/NoteForm/NoteForm";
-import NoteModal from "@/components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 import NoteList from "@/components/NoteList/NoteList";
 import Pagination from "@/components/Pagination/Pagination";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import css from "@/app/page.module.css"
+import { useRouter } from "next/navigation";
 
 interface NotesClientProps {
   initialData: NotesHttpResponse,
+  category: string | undefined
 }
 
-export default function NotesClient({ initialData}:NotesClientProps) {
+export default function NotesClient({ initialData, category}:NotesClientProps) {
+  const [tag, setTag] = useState(category);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { data, isSuccess } = useQuery({
-    queryKey: ["notes", search, page],
-    queryFn: () => fetchNotes(search, page),
+    queryKey: ["notes", search, page, tag],
+    queryFn: () => fetchNotes(search, page, tag),
     placeholderData: keepPreviousData,
-    initialData: initialData,
+    initialData,
   })
-
   
-
   const totalPages = data?.totalPages ?? 1
 
   const handleCreate = () => {
@@ -42,7 +43,9 @@ export default function NotesClient({ initialData}:NotesClientProps) {
     debouncedSetSearch(value)
   };
 
+
   const debouncedSetSearch = useDebouncedCallback((value: string) => {
+    setTag(category)
     setSearch(value)
     setPage(1)
   },
@@ -58,9 +61,9 @@ export default function NotesClient({ initialData}:NotesClientProps) {
       </div>
       {data?.notes !== undefined && <NoteList notes={data?.notes} />}
       {isModalOpen &&
-        <NoteModal onClose={handleClose} >
+        <Modal onClose={handleClose} >
           <NoteForm onClose={handleClose} />
-        </NoteModal>
+        </Modal>
       }
     </div>
   )

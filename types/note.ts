@@ -14,3 +14,4 @@ export interface NewNote {
   createdAt?: string;
   updatedAt?: string;
 }
+
