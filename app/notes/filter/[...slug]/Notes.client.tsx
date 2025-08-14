@@ -13,11 +13,10 @@ import css from "@/app/page.module.css"
 
 interface NotesClientProps {
   initialData: NotesHttpResponse,
-  selectTag: string | undefined
+  tag: string | undefined
 }
 
-export default function NotesClient({ initialData, selectTag }: NotesClientProps) {
-  const [tag, setTag] = useState(selectTag);
+export default function NotesClient({ initialData, tag }: NotesClientProps) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -27,10 +26,6 @@ export default function NotesClient({ initialData, selectTag }: NotesClientProps
     placeholderData: keepPreviousData,
     initialData,
   })
-  
-  useEffect(() => { 
-    setTag(selectTag)
-  }, [selectTag])
 
   const totalPages = data?.totalPages ?? 1
 
