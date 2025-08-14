@@ -9,7 +9,7 @@ import Modal from "@/components/Modal/Modal";
 import NoteList from "@/components/NoteList/NoteList";
 import Pagination from "@/components/Pagination/Pagination";
 import SearchBox from "@/components/SearchBox/SearchBox";
-import css from "@/app/page.module.css"
+import css from "./NotesPage.module.css"
 
 interface NotesClientProps {
   initialData: NotesHttpResponse,
@@ -26,10 +26,6 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
     placeholderData: keepPreviousData,
     initialData,
   })
-  
-  useEffect(() => {
-    setPage(1)
-  }, [tag])
 
   const totalPages = data?.totalPages ?? 1
 
@@ -59,7 +55,9 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
         {isSuccess && totalPages > 1 && <Pagination totalPages={totalPages} page={page} setPage={setPage}/>}
         <button className={css.button} onClick={handleCreate}>Create note +</button>
       </div>
-      {data?.notes !== undefined && data?.notes.length !== 0 && <NoteList notes={data?.notes} />}
+      {data?.notes !== undefined && data?.notes.length !== 0
+        ? <NoteList notes={data?.notes} />
+        : <p className={css.empty}>Notes not found.</p>}
       {isModalOpen &&
         <Modal onClose={handleClose} >
           <NoteForm onClose={handleClose} />
