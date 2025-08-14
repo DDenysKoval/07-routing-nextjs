@@ -12,7 +12,7 @@ export default async function NotesByCategory({ params }: Props) {
 
   return (
     <main >
-      <NotesClient initialData={initialData} category={ tag } />
+      <NotesClient initialData={initialData} selectTag={ tag } />
     </main>
   )
 }

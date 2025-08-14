@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { fetchNotes, NotesHttpResponse } from "@/lib/api";
 import { useDebouncedCallback } from "use-debounce";
@@ -10,15 +10,14 @@ import NoteList from "@/components/NoteList/NoteList";
 import Pagination from "@/components/Pagination/Pagination";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import css from "@/app/page.module.css"
-import { useRouter } from "next/navigation";
 
 interface NotesClientProps {
   initialData: NotesHttpResponse,
-  category: string | undefined
+  selectTag: string | undefined
 }
 
-export default function NotesClient({ initialData, category}:NotesClientProps) {
-  const [tag, setTag] = useState(category);
+export default function NotesClient({ initialData, selectTag }: NotesClientProps) {
+  const [tag, setTag] = useState(selectTag);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -29,6 +28,10 @@ export default function NotesClient({ initialData, category}:NotesClientProps) {
     initialData,
   })
   
+  useEffect(() => { 
+    setTag(selectTag)
+  }, [selectTag])
+
   const totalPages = data?.totalPages ?? 1
 
   const handleCreate = () => {
@@ -45,7 +48,6 @@ export default function NotesClient({ initialData, category}:NotesClientProps) {
 
 
   const debouncedSetSearch = useDebouncedCallback((value: string) => {
-    setTag(category)
     setSearch(value)
     setPage(1)
   },
@@ -59,7 +61,7 @@ export default function NotesClient({ initialData, category}:NotesClientProps) {
         {isSuccess && totalPages > 1 && <Pagination totalPages={totalPages} page={page} setPage={setPage}/>}
         <button className={css.button} onClick={handleCreate}>Create note +</button>
       </div>
-      {data?.notes !== undefined && <NoteList notes={data?.notes} />}
+      {data?.notes !== undefined && data?.notes.length !== 0 && <NoteList notes={data?.notes} />}
       {isModalOpen &&
         <Modal onClose={handleClose} >
           <NoteForm onClose={handleClose} />

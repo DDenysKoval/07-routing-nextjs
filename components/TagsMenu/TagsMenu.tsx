@@ -18,11 +18,11 @@ const TagsMenu = () => {
       {isOpen && (
         <ul className={css.menuList}>
           {tags.map((tag) => (
-            <li className={css.menuItem} key={tag}>
-            <Link href={`/notes/filter/${tag}`} className={css.menuLink}>
-              {tag}
-            </Link>
-          </li>
+            <li className={css.menuItem} key={tag} onClick={ () => setIsOpen(false)}>
+              <Link href={`/notes/filter/${tag}`} className={css.menuLink}>
+                {tag}
+              </Link>
+            </li>
           ))}
         </ul>)}
     </div>
