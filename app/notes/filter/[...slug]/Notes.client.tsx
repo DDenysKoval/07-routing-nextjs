@@ -26,6 +26,10 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
     placeholderData: keepPreviousData,
     initialData,
   })
+  
+  useEffect(() => {
+    setPage(1)
+  }, [tag])
 
   const totalPages = data?.totalPages ?? 1
 
@@ -40,7 +44,6 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
   const handleChange = (value:string) => {
     debouncedSetSearch(value)
   };
-
 
   const debouncedSetSearch = useDebouncedCallback((value: string) => {
     setSearch(value)
